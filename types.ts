@@ -1,18 +1,20 @@
 
-export enum GameStatus {
-  IDLE = 'IDLE',
-  PLAYING = 'PLAYING',
-  GAME_OVER = 'GAME_OVER'
-}
+export const GameStatus = {
+  IDLE: 'IDLE',
+  PLAYING: 'PLAYING',
+  GAME_OVER: 'GAME_OVER'
+} as const;
+export type GameStatus = typeof GameStatus[keyof typeof GameStatus];
 
-export enum PlayerAction {
-  IDLE = 'IDLE',
-  RUN = 'RUN',
-  JUMP = 'JUMP',
-  SLIDE = 'SLIDE',
-  ROLL = 'ROLL',
-  HIT = 'HIT'
-}
+export const PlayerAction = {
+  IDLE: 'IDLE',
+  RUN: 'RUN',
+  JUMP: 'JUMP',
+  SLIDE: 'SLIDE',
+  ROLL: 'ROLL',
+  HIT: 'HIT'
+} as const;
+export type PlayerAction = typeof PlayerAction[keyof typeof PlayerAction];
 
 export type ObstacleType = 'low' | 'high' | 'wide' | 'pit' | 'wall';
 
