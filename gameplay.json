@@ -1,0 +1,19 @@
+{
+  "name": "Block Runner 3D",
+  "player": {
+    "model": "cube",
+    "speed": 5
+  },
+  "obstacles": {
+    "spawnInterval": 1.5,
+    "spawnDistance": 20,
+    "randomHeightRange": [1, 3]
+  },
+  "scoring": {
+    "scorePerSecond": 10
+  },
+  "controls": {
+    "desktop": ["A", "D"],
+    "mobile": "swipe"
+  }
+}

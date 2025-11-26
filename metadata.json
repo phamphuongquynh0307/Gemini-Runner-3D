@@ -1,0 +1,5 @@
+{
+  "name": "Block Runner 3D",
+  "description": "A simple 3D endless runner game built with React Three Fiber. Dodge obstacles, survive as long as possible, and beat your high score.",
+  "requestFramePermissions": []
+}
