@@ -1,19 +1,16 @@
 {
-  "name": "Block Runner 3D",
-  "player": {
-    "model": "cube",
-    "speed": 5
+  "name": "Runner 3D Animation",
+  "playerModel": "RobotExpressive.glb",
+  "animations": ["Idle", "Run", "Hit"],
+  "lanes": [-2, 0, 2],
+  "spawn": {
+    "interval": 1.5,
+    "distance": 25,
+    "obstacleHeightRange": [1, 3]
   },
-  "obstacles": {
-    "spawnInterval": 1.5,
-    "spawnDistance": 20,
-    "randomHeightRange": [1, 3]
-  },
-  "scoring": {
-    "scorePerSecond": 10
-  },
+  "speed": 5,
   "controls": {
-    "desktop": ["A", "D"],
+    "desktop": ["A", "D", "ArrowLeft", "ArrowRight"],
     "mobile": "swipe"
   }
 }

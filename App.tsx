@@ -1,67 +1,87 @@
-import React, { useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { GameScene } from './components/GameScene';
 import { useGameStore } from './store';
 import { GameStatus } from './types';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// UI Components
 const StartScreen = () => {
   const { setStatus } = useGameStore();
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 z-10 text-white">
-      <h1 className="text-5xl font-bold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">
-        BLOCK RUNNER 3D
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 z-10 text-white backdrop-blur-sm"
+    >
+      <h1 className="text-6xl font-black mb-6 italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-orange-600">
+        RUNNER 3D
       </h1>
-      <div className="mb-8 text-center text-gray-300">
-        <p className="mb-2">Controls:</p>
-        <p>Desktop: <span className="font-bold text-white">A</span> / <span className="font-bold text-white">D</span> to move</p>
-        <p>Mobile: <span className="font-bold text-white">Swipe</span> left/right</p>
+      <div className="bg-black/40 p-6 rounded-lg border border-white/10 mb-8 backdrop-blur-md">
+        <p className="text-gray-300 mb-2 font-mono text-sm">CONTROLS</p>
+        <div className="flex gap-4 mb-2">
+          <div className="bg-white/10 px-3 py-1 rounded">A / Left</div>
+          <div className="bg-white/10 px-3 py-1 rounded">D / Right</div>
+        </div>
+        <div className="text-xs text-gray-500">Mobile: Swipe Left/Right</div>
       </div>
-      <button 
+      <motion.button 
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setStatus(GameStatus.PLAYING)}
-        className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-bold rounded-lg text-xl transition-all transform hover:scale-105 shadow-lg shadow-cyan-500/50"
+        className="px-10 py-4 bg-white text-black font-bold text-xl rounded-full shadow-[0_0_20px_rgba(255,255,255,0.4)]"
       >
-        PLAY
-      </button>
-    </div>
+        START RUNNING
+      </motion.button>
+    </motion.div>
   );
 };
 
 const GameOverScreen = () => {
   const { score, highScore, resetGame } = useGameStore();
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center bg-red-900/80 z-10 text-white backdrop-blur-sm">
-      <h2 className="text-6xl font-black mb-4 text-red-500 tracking-widest uppercase drop-shadow-md">You Lose</h2>
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="absolute inset-0 flex flex-col items-center justify-center bg-red-900/40 z-20 text-white backdrop-blur-md"
+    >
+      <h2 className="text-7xl font-black mb-2 text-red-500 drop-shadow-lg">CRASHED</h2>
       
-      <div className="bg-black/50 p-6 rounded-xl border border-white/10 mb-8 min-w-[200px] text-center">
-        <div className="mb-4">
-          <p className="text-gray-400 text-sm uppercase tracking-wide">Score</p>
-          <p className="text-4xl font-mono">{score}</p>
+      <div className="grid grid-cols-2 gap-8 my-8 text-center">
+        <div>
+          <p className="text-sm font-bold text-gray-400 tracking-widest uppercase">Score</p>
+          <p className="text-5xl font-mono mt-2">{score}</p>
         </div>
         <div>
-          <p className="text-yellow-500 text-sm uppercase tracking-wide">Best Score</p>
-          <p className="text-2xl font-mono text-yellow-300">{highScore}</p>
+          <p className="text-sm font-bold text-yellow-500 tracking-widest uppercase">Best</p>
+          <p className="text-5xl font-mono mt-2 text-yellow-400">{highScore}</p>
         </div>
       </div>
 
-      <button 
-        onClick={() => resetGame()} // Reset state returns to IDLE
-        className="px-8 py-3 bg-white text-red-600 font-bold rounded-lg text-xl hover:bg-gray-100 transition-colors shadow-xl"
+      <motion.button 
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => resetGame()}
+        className="px-8 py-3 bg-red-600 hover:bg-red-500 text-white font-bold rounded shadow-lg uppercase tracking-wider"
       >
-        Try Again
-      </button>
-    </div>
+        Restart System
+      </motion.button>
+    </motion.div>
   );
 };
 
 const HUD = () => {
   const { score } = useGameStore();
   return (
-    <div className="absolute top-4 left-4 z-10">
-      <div className="text-white font-mono font-bold text-2xl drop-shadow-md">
-        SCORE: {score}
+    <motion.div 
+      initial={{ y: -50 }}
+      animate={{ y: 0 }}
+      className="absolute top-6 left-6 z-10"
+    >
+      <div className="text-white font-mono font-black text-3xl italic drop-shadow-[2px_2px_0_rgba(0,0,0,1)]">
+        {score.toString().padStart(5, '0')}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
@@ -69,15 +89,17 @@ const App: React.FC = () => {
   const status = useGameStore((state) => state.status);
 
   return (
-    <div className="relative w-full h-full bg-gray-900">
-      {/* 2D UI Layer */}
-      {status === GameStatus.IDLE && <StartScreen />}
-      {status === GameStatus.PLAYING && <HUD />}
-      {status === GameStatus.GAME_OVER && <GameOverScreen />}
+    <div className="relative w-full h-full bg-[#111]">
+      <AnimatePresence>
+        {status === GameStatus.IDLE && <StartScreen key="start" />}
+        {status === GameStatus.PLAYING && <HUD key="hud" />}
+        {status === GameStatus.GAME_OVER && <GameOverScreen key="over" />}
+      </AnimatePresence>
 
-      {/* 3D Scene Layer */}
-      <Canvas shadows dpr={[1, 2]}>
-        <GameScene />
+      <Canvas shadows dpr={[1, 1.5]}>
+        <Suspense fallback={null}>
+           <GameScene />
+        </Suspense>
       </Canvas>
     </div>
   );
